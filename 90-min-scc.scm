@@ -1,4 +1,4 @@
-#!/usr/local/Gambit-C/bin/gsi
+#!/usr/bin/gsi
 
 ; Copyright (C) 2004 by Marc Feeley, All Rights Reserved.
 
@@ -761,6 +761,15 @@ int main () { printf (\"result = %d\\n\", OBJ2INT(execute ())); return 0; }
 
 ;------------------------------------------------------------------------------
 
+(define (n a)
+  (if (list? a)
+      (apply string-append (map n a))
+      (if (number? a)
+          (number->string a)
+          (if (symbol? a)
+              (symbol->string a)
+              a))))
+
 (define (compile-file filename)
   (let ((ast (parse-file filename)))
     (display "-------------------------- AST:\n")
@@ -777,7 +786,7 @@ int main () { printf (\"result = %d\\n\", OBJ2INT(execute ())); return 0; }
           (with-output-to-file
               (string-append (path-strip-extension filename) ".c")
             (lambda ()
-              (display code))))))))
+              (display (n code)))))))))
 
 (define (main filename)
   (compile-file filename))
